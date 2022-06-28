@@ -1,91 +1,92 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, StatusBar, SafeAreaView, Touchable, TouchableOpacity } from 'react-native';
 import { Text, Icon, Card, Input, Image } from 'react-native-elements';
 import { ScrollView } from 'react-native-gesture-handler';
+import AxiosInstance from '../../api/AxiosInstance';
 
-const Home = () => {
+type CategoriaType = {
+   idCategoria: number;
+   nomeCategoria: string;
+   nomeImagem: string;
+}
+
+const Home = ({ route, navigation }) => {
+   // console.log('Token: ' + token);
+   // console.log('Params: ' + JSON.stringfy(route));
+
    // const [search, setSearch] = useState('')
 
+   const { token } = route.params
+   const [categoria, setCategoria] = useState<CategoriaType[]>([])
+   const [produto, setProduto] = useState<ProdutoType[]>([])
+
+   useEffect(() => {
+      getDadosCategoria()
+   }, [])
+
+   useEffect(() => {
+      getDadosProduto()
+   }, [])
+
+   const getDadosCategoria = async () => {
+      AxiosInstance.get(
+         `/categoria`,
+         { headers: { 'Authorization': `Bearer ${token}` } }
+      ).then(result => {
+         console.log('Dados das categorias: ' + JSON.stringify(result.data));
+         setCategoria(result.data)
+      }).catch((error) => {
+         console.log('Erro ao carregar a lista de categorias - ' + JSON.stringify(error));
+      })
+   }
+
+   const getDadosProduto = async () => {
+      AxiosInstance.get(
+         `/estoque/estoque-produto`,
+         { headers: { 'Authorization': `Bearer ${token}` } }
+      ).then(result => {
+         console.log('Dados dos produtos: ' + JSON.stringify(result.data));
+         setProduto(result.data)
+      }).catch((error) => {
+         console.log('Erro ao carregar a lista de produtos - ' + JSON.stringify(error));
+      })
+   }
+
    return (
-      <ScrollView style={styles.container}>
+      <SafeAreaView style={styles.container}>
          <ScrollView style={styles.scrollCategorias} horizontal={true}>
-            <TouchableOpacity
-               onPress={() => console.log('Categoria 1 foi clicada')}
-               style={styles.botaoCategoria}
-            >
-               <View style={styles.viewItensCategoria}>
-                  <Text style={styles.textoNomeCategoria}>{'Categoria 1'}</Text>
-               </View>
-            </TouchableOpacity>
-            <TouchableOpacity
-               onPress={() => console.log('Categoria 2 foi clicada')}
-               style={styles.botaoCategoria}
-            >
-               <View style={styles.viewItensCategoria}>
-                  <Text style={styles.textoNomeCategoria}>{'Categoria 2'}</Text>
-               </View>
-            </TouchableOpacity>
-            <TouchableOpacity
-               onPress={() => console.log('Categoria 3 foi clicada')}
-               style={styles.botaoCategoria}
-            >
-               <View style={styles.viewItensCategoria}>
-                  <Text style={styles.textoNomeCategoria}>{'Categoria 3'}</Text>
-               </View>
-            </TouchableOpacity>
-            <TouchableOpacity
-               onPress={() => console.log('Categoria 4 foi clicada')}
-               style={styles.botaoCategoria}
-            >
-               <View style={styles.viewItensCategoria}>
-                  <Text style={styles.textoNomeCategoria}>{'Categoria 4'}</Text>
-               </View>
-            </TouchableOpacity>
+            {
+               categoria.map((k, i) => (
+                  <TouchableOpacity key={i}
+                     onPress={() => console.log(`Categoria ${k.nomeCategoria} foi clicada`)}
+                     style={styles.botaoCategoria}
+                  >
+                     <View style={styles.viewItensCategoria}>
+                        <Text style={styles.textoNomeCategoria}>{k.nomeCategoria}</Text>
+                     </View>
+                  </TouchableOpacity>
+               ))
+            }
          </ScrollView>
+
          <Text>{'Recentes'}</Text>
          <ScrollView horizontal={true}>
-            <TouchableOpacity>
-               <Card>
-                  <Card.Image source={require('../../assets/spiritIsland.png')} />
-                  <Card.Divider />
-                  <Card.Title>
-                     Título
-                  </Card.Title>
-                  <Text>Descrição</Text>
-               </Card>
-            </TouchableOpacity>
-            <TouchableOpacity>
-               <Card>
-                  <Card.Image source={require('../../assets/spiritIsland.png')} />
-                  <Card.Divider />
-                  <Card.Title>
-                     Título
-                  </Card.Title>
-                  <Text>Descrição</Text>
-               </Card>
-            </TouchableOpacity>
-            <TouchableOpacity>
-               <Card>
-                  <Card.Image source={require('../../assets/spiritIsland.png')} />
-                  <Card.Divider />
-                  <Card.Title>
-                     Título
-                  </Card.Title>
-                  <Text>Descrição</Text>
-               </Card>
-            </TouchableOpacity>
-            <TouchableOpacity>
-               <Card>
-                  <Card.Image source={require('../../assets/spiritIsland.png')} />
-                  <Card.Divider />
-                  <Card.Title>
-                     Título
-                  </Card.Title>
-                  <Text>Descrição</Text>
-               </Card>
-            </TouchableOpacity>
+            {
+               produto.map((k, i) => (
+                  <TouchableOpacity>
+                     <Card key={i}>
+                        <Card.Image source={require('../../assets/spiritIsland.png')} />
+                        <Card.Divider />
+                        <Card.Title>
+                           {k.nomeProduto}
+                        </Card.Title>
+                        <Text>Descrição</Text>
+                     </Card>
+                  </TouchableOpacity>
+               ))
+            }
          </ScrollView>
-      </ScrollView>
+      </SafeAreaView>
 
       // <SafeAreaView style={styles.container}>
       //    <StatusBar backgroundColor='#7054B6' />
