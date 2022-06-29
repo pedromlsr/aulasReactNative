@@ -1,16 +1,21 @@
-import React, { useState } from 'react';
-import { View, StyleSheet, Alert } from 'react-native';
+import React, { useState, useContext } from 'react';
+import { View, StyleSheet, Alert, Keyboard } from 'react-native';
 import { Text, Input, Icon, Button } from 'react-native-elements';
-import { LoginService } from '../../services/LoginService';
+import { AutenticacaoContext } from '../../context/AutenticacaoContext';
+import Loading from '../../components/Loading/Loading';
 
 const Login = ({ navigation }) => {
    const [email, setEmail] = useState('')
    const [senha, setSenha] = useState('')
+   const { isLoading, setIsLoading } = useContext(AutenticacaoContext)
+   const { login } = useContext(AutenticacaoContext)
 
    const handleLogin = async (email: string, senha: string) => {
+      Keyboard.dismiss()
+      setIsLoading(true)
       console.log(`Email: ${email} - Senha: ${senha}`)
 
-      const respostaLogin = await LoginService(email, senha)
+      const respostaLogin = await login(email, senha)
 
       if (!respostaLogin) {
          Alert.alert(
@@ -22,21 +27,14 @@ const Login = ({ navigation }) => {
             ]
          )
       } else {
-         navigation.navigate('HomeScreen', {
-            screen: 'TabNavigationScreen',
-            params: {
-               screen: 'HomeTabScreen',
-               params: {
-                  token: respostaLogin.token,
-               }
-            }
-         })
+         setIsLoading(false)
+         navigation.navigate('HomeScreen')
       }
    }
 
    return (
       <View style={styles.container}>
-         <Text style={styles.textoEntrada}>{'Bem-vindo'}</Text>
+         <Text style={styles.textoEntrada}>{'Bem-vindo!'}</Text>
          <Input
             placeholder='E-mail'
             onChangeText={setEmail}
@@ -53,6 +51,7 @@ const Login = ({ navigation }) => {
             leftIcon={<Icon name='key' color='#000' type='font-awesome' size={24} />}
             // inputStyle={ }
             placeholderTextColor={'#000'}
+            secureTextEntry={true}
          />
          <Button
             title='Entrar'
@@ -60,6 +59,7 @@ const Login = ({ navigation }) => {
             buttonStyle={styles.buttonLogin}
             titleStyle={styles.buttonTextLogin}
          />
+         {isLoading ? <Loading /> : null}
       </View>
    )
 }
@@ -75,7 +75,9 @@ const styles = StyleSheet.create({
 
    textoEntrada: {
       fontWeight: 'bold',
-      fontSize: 24
+      fontSize: 24,
+      textAlign: 'center',
+      marginBottom: 10
    },
 
    buttonLogin: {

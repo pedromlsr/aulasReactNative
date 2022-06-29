@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { View, StyleSheet, StatusBar, SafeAreaView, Touchable, TouchableOpacity } from 'react-native';
 import { Text, Icon, Card, Input, Image } from 'react-native-elements';
 import { ScrollView } from 'react-native-gesture-handler';
 import AxiosInstance from '../../api/AxiosInstance';
+import { CardProduto } from '../../components/CardProduto/CardProduto';
+import { AutenticacaoContext } from '../../context/AutenticacaoContext';
 
 type CategoriaType = {
    idCategoria: number;
@@ -10,28 +12,40 @@ type CategoriaType = {
    nomeImagem: string;
 }
 
-const Home = ({ route, navigation }) => {
+type ProdutoType = {
+   idProduto: number;
+   sku: string;
+   nomeProduto: string;
+   descricaoProduto: string;
+   imagemProduto: string;
+   precoProduto: number;
+   nomeFornecedor: string;
+   idFornecedor: number;
+   nomeCategoria: string;
+   idCategoria: number;
+}
+
+
+const Home = ({ navigation }) => {
    // console.log('Token: ' + token);
    // console.log('Params: ' + JSON.stringfy(route));
-
    // const [search, setSearch] = useState('')
 
-   const { token } = route.params
+   const { usuario } = useContext(AutenticacaoContext)
+   console.log('Usuario: ' + JSON.stringify(usuario));
+
    const [categoria, setCategoria] = useState<CategoriaType[]>([])
    const [produto, setProduto] = useState<ProdutoType[]>([])
 
    useEffect(() => {
       getDadosCategoria()
-   }, [])
-
-   useEffect(() => {
       getDadosProduto()
    }, [])
 
    const getDadosCategoria = async () => {
       AxiosInstance.get(
          `/categoria`,
-         { headers: { 'Authorization': `Bearer ${token}` } }
+         { headers: { 'Authorization': `Bearer ${usuario.token}` } }
       ).then(result => {
          console.log('Dados das categorias: ' + JSON.stringify(result.data));
          setCategoria(result.data)
@@ -42,8 +56,8 @@ const Home = ({ route, navigation }) => {
 
    const getDadosProduto = async () => {
       AxiosInstance.get(
-         `/estoque/estoque-produto`,
-         { headers: { 'Authorization': `Bearer ${token}` } }
+         `/produto`,
+         { headers: { 'Authorization': `Bearer ${usuario.token}` } }
       ).then(result => {
          console.log('Dados dos produtos: ' + JSON.stringify(result.data));
          setProduto(result.data)
@@ -54,7 +68,7 @@ const Home = ({ route, navigation }) => {
 
    return (
       <SafeAreaView style={styles.container}>
-         <ScrollView style={styles.scrollCategorias} horizontal={true}>
+         <ScrollView style={styles.scrollCategorias} horizontal={true} showsHorizontalScrollIndicator={false}>
             {
                categoria.map((k, i) => (
                   <TouchableOpacity key={i}
@@ -69,19 +83,12 @@ const Home = ({ route, navigation }) => {
             }
          </ScrollView>
 
-         <Text>{'Recentes'}</Text>
-         <ScrollView horizontal={true}>
+         <Text style={styles.sectionTitle}>{'Recentes'}</Text>
+         <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
             {
                produto.map((k, i) => (
-                  <TouchableOpacity>
-                     <Card key={i}>
-                        <Card.Image source={require('../../assets/spiritIsland.png')} />
-                        <Card.Divider />
-                        <Card.Title>
-                           {k.nomeProduto}
-                        </Card.Title>
-                        <Text>Descrição</Text>
-                     </Card>
+                  <TouchableOpacity key={i}>
+                     <CardProduto produto={k} />
                   </TouchableOpacity>
                ))
             }
@@ -175,6 +182,13 @@ const styles = StyleSheet.create({
    textoNomeCategoria: {
       color: '#fff',
       textAlign: 'center'
+   },
+
+   sectionTitle: {
+      fontWeight: 'bold',
+      fontSize: 18,
+      marginLeft: 15,
+      marginTop: 20
    }
 
 
