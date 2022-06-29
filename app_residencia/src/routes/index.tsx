@@ -42,6 +42,7 @@ const BottomTabNavigator = () => {
             name='CategoriasTabScreen'
             component={Categorias}
             options={{
+               headerTitle: 'Categorias',
                tabBarLabel: 'Categorias',
                tabBarIcon: ({ size, color }) => (
                   <Icon name='ballot' color={color} type='font-awesome5' size={size} />

@@ -3,11 +3,12 @@ import { View, StyleSheet, Alert, Keyboard } from 'react-native';
 import { Text, Input, Icon, Button } from 'react-native-elements';
 import { AutenticacaoContext } from '../../context/AutenticacaoContext';
 import Loading from '../../components/Loading/Loading';
+import { LoadingContext } from '../../context/LoadingContext';
 
 const Login = ({ navigation }) => {
    const [email, setEmail] = useState('')
    const [senha, setSenha] = useState('')
-   const { isLoading, setIsLoading } = useContext(AutenticacaoContext)
+   const { isLoading, setIsLoading } = useContext(LoadingContext)
    const { login } = useContext(AutenticacaoContext)
 
    const handleLogin = async (email: string, senha: string) => {
@@ -18,6 +19,7 @@ const Login = ({ navigation }) => {
       const respostaLogin = await login(email, senha)
 
       if (!respostaLogin) {
+         setIsLoading(false)
          Alert.alert(
             'Erro:',
             '',
