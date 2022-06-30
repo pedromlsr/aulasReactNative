@@ -19,6 +19,7 @@ const BottomTabNavigator = () => {
    return (
       <TabNavigation.Navigator
          screenOptions={{
+            tabBarHideOnKeyboard: true,
             headerShown: false,
             tabBarStyle: {
                backgroundColor: '#333',
@@ -32,7 +33,7 @@ const BottomTabNavigator = () => {
             name='HomeTabScreen'
             component={Home}
             options={{
-               tabBarLabel: 'Home',
+               tabBarShowLabel: false,
                tabBarIcon: ({ size, color }) => (
                   <Icon name='home' color={color} type='font-awesome' size={size} />
                )
@@ -42,8 +43,7 @@ const BottomTabNavigator = () => {
             name='CategoriasTabScreen'
             component={Categorias}
             options={{
-               headerTitle: 'Categorias',
-               tabBarLabel: 'Categorias',
+               tabBarShowLabel: false,
                tabBarIcon: ({ size, color }) => (
                   <Icon name='ballot' color={color} type='font-awesome5' size={size} />
                )
@@ -53,7 +53,7 @@ const BottomTabNavigator = () => {
             name='FavoritosTabScreen'
             component={Favoritos}
             options={{
-               tabBarLabel: 'Favoritos',
+               tabBarShowLabel: false,
                tabBarIcon: ({ size, color }) => (
                   <Icon name='heart' color={color} type='font-awesome' size={size} />
                )
@@ -64,7 +64,7 @@ const BottomTabNavigator = () => {
             name='CarrinhoTabScreen'
             component={Carrinho}
             options={{
-               tabBarLabel: 'Carrinho',
+               tabBarShowLabel: false,
                tabBarIcon: ({ size, color }) => (
                   <Icon name='shopping-cart' color={color} type='font-awesome' size={size} />
                )

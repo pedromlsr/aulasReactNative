@@ -1,7 +1,9 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { StyleSheet, StatusBar, SafeAreaView } from 'react-native';
-import { Text, Icon, Input } from 'react-native-elements';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { Text, Icon, Input, SearchBar } from 'react-native-elements';
+import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
+import { log } from 'react-native-reanimated';
+import { CardDestaque } from '../../components/CardDestaque/CardDestaque';
 import Loading from '../../components/Loading/Loading';
 import ScrollCategorias from '../../components/ScrollCategorias/ScrollCategorias';
 import ScrollProdutos from '../../components/ScrollProdutos/ScrollProdutos';
@@ -14,34 +16,52 @@ const Home = ({ navigation }) => {
    // console.log('Params: ' + JSON.stringfy(route));
 
    const { isLoading } = useContext(LoadingContext)
-   const { search, setSarch } = useContext(SearchContext)
-   const { categorias, setCategorias } = useContext(CategoriasContext)
+   const { search, setSearch } = useContext(SearchContext)
+   const { categorias, setCategorias, categoriasInitial } = useContext(CategoriasContext)
 
-   const handleFilter = () => {
-
-   }
+   useEffect(() => {
+      if (search === '') {
+         setCategorias(categoriasInitial)
+      } else {
+         setCategorias(
+            categorias.filter(
+               (item) => item.nomeCategoria.toLowerCase().indexOf(search.toLowerCase()) > -1
+            )
+         )
+      }
+   }, [search])
 
    return (
-      <SafeAreaView style={styles.container}>
+      <ScrollView style={styles.container}>
          <StatusBar backgroundColor='#333' />
+         {/* <SearchBar
+            containerStyle={styles.inputPesquisa}
+            inputContainerStyle={styles.inputPesquisa}
+            placeholder='Ex: Categoria...'
+            value={search}
+            onChangeText={(text) => setSearch(text)}
+            autoCorrect={false}
+         /> */}
          <Input
             placeholder='Ex: Categoria...'
             placeholderTextColor={'#333'}
             value={search}
             onChangeText={(text) => setSearch(text)}
-            leftIcon={<Icon name='search' color='#000' type='font-awesome' size={24} />}
+            leftIcon={
+               <Icon name='search' color='#000' type='font-awesome' size={24} />
+            }
             rightIcon={
-               <TouchableOpacity onPress={handleFilter}>
-                  <Icon name='filter-list' color='#000' type='font-awesome5' size={24} />
-               </TouchableOpacity>
+               <Icon name='filter-list' color='#000' type='font-awesome5' size={24} />
             }
             inputContainerStyle={styles.inputPesquisa}
          />
          <ScrollCategorias />
          <Text style={styles.sectionTitle}>{'Recentes'}</Text>
          <ScrollProdutos />
+         <Text style={styles.sectionTitle}>{'Destaques'}</Text>
+         <CardDestaque />
          {isLoading ? <Loading /> : null}
-      </SafeAreaView>
+      </ScrollView>
    )
 }
 

@@ -15,8 +15,8 @@ export const CardCategoria = (props) => {
 
 const styles = StyleSheet.create({
    cardItensCategoria: {
-      width: 120,
-      height: 120,
+      width: 100,
+      height: 70,
       backgroundColor: '#333',
       justifyContent: 'center',
       borderRadius: 10,

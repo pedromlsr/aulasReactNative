@@ -3,16 +3,17 @@ import { StyleSheet } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler';
 import AxiosInstance from '../../api/AxiosInstance';
 import { AutenticacaoContext } from '../../context/AutenticacaoContext';
+import { CategoriasContext } from '../../context/CategoriaContext';
 import { LoadingContext } from '../../context/LoadingContext';
-import { CategoriaType } from '../../models/CategoriaType';
 import { CardCategoria } from '../CardCategoria/CardCategoria';
 
 const ScrollCategorias = () => {
    const { setIsLoading } = useContext(LoadingContext)
+   const { categorias, setCategorias, setCategoriasInitial } = useContext(CategoriasContext)
    const { usuario } = useContext(AutenticacaoContext)
    console.log('Usuario: ' + JSON.stringify(usuario));
 
-   const [categorias, setCategorias] = useState<CategoriaType[]>([])
+   // const [categorias, setCategorias] = useState<CategoriaType[]>([])
 
    useEffect(() => {
       setIsLoading(true)
@@ -26,6 +27,7 @@ const ScrollCategorias = () => {
       ).then(result => {
          console.log('Dados das categorias: ' + JSON.stringify(result.data));
          setCategorias(result.data)
+         setCategoriasInitial(result.data)
          setIsLoading(false)
       }).catch((error) => {
          console.log('Erro ao carregar a lista de categorias - ' + JSON.stringify(error));
