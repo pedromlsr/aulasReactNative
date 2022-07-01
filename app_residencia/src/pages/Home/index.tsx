@@ -34,14 +34,6 @@ const Home = ({ navigation }) => {
    return (
       <ScrollView style={styles.container}>
          <StatusBar backgroundColor='#333' />
-         {/* <SearchBar
-            containerStyle={styles.inputPesquisa}
-            inputContainerStyle={styles.inputPesquisa}
-            placeholder='Ex: Categoria...'
-            value={search}
-            onChangeText={(text) => setSearch(text)}
-            autoCorrect={false}
-         /> */}
          <Input
             placeholder='Ex: Categoria...'
             placeholderTextColor={'#333'}
@@ -57,7 +49,7 @@ const Home = ({ navigation }) => {
          />
          <ScrollCategorias />
          <Text style={styles.sectionTitle}>{'Recentes'}</Text>
-         <ScrollProdutos />
+         <ScrollProdutos navigation={navigation} />
          <Text style={styles.sectionTitle}>{'Destaques'}</Text>
          <CardDestaque />
          {isLoading ? <Loading /> : null}

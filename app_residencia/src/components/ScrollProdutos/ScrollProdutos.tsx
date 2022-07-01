@@ -7,7 +7,7 @@ import { LoadingContext } from '../../context/LoadingContext';
 import { ProdutoType } from '../../models/ProdutoType';
 import { CardProduto } from '../CardProduto/CardProduto';
 
-const ScrollProdutos = () => {
+const ScrollProdutos = (props) => {
    const { setIsLoading } = useContext(LoadingContext)
    const { usuario } = useContext(AutenticacaoContext)
    console.log('Usuario: ' + JSON.stringify(usuario));
@@ -38,7 +38,7 @@ const ScrollProdutos = () => {
          showsHorizontalScrollIndicator={false}
          keyExtractor={(item) => item.idProduto.toString()}
          data={produtos}
-         renderItem={({ item }) => <CardProduto produto={item} />}
+         renderItem={({ item }) => <CardProduto produto={item} navigation={props.navigation} />}
          initialNumToRender={2}
          style={styles.scrollProdutos}
       />

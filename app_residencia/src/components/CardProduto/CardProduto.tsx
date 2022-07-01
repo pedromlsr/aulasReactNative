@@ -5,7 +5,18 @@ import { Card, Text } from "react-native-elements"
 export const CardProduto = (props) => {
 
    return (
-      <TouchableOpacity>
+      <TouchableOpacity onPress={() => {
+         props.navigation.navigate({
+            name: 'ProdutoScreen', params: {
+               id_produto: props.produto.idProduto,
+               sku: props.produto.sku,
+               nome_produto: props.produto.nomeProduto,
+               descricao_produto: props.produto.descricaoProduto,
+               preco_produto: props.produto.precoProduto,
+               imagem_produto: props.produto.imagemProduto
+            }
+         })
+      }}>
          <Card containerStyle={styles.cardContainer}>
             <Card.Image source={require('../../assets/spiritIsland.png')} style={styles.cardImage} />
             <Card.Divider />

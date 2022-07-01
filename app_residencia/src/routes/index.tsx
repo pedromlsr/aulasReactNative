@@ -11,7 +11,7 @@ import Home from '../pages/Home';
 import Categorias from '../pages/Categorias';
 import Favoritos from '../pages/Favoritos';
 import Carrinho from "../pages/Carrinho";
-
+import Produto from "../pages/Produto";
 
 const TabNavigation = createBottomTabNavigator()
 
@@ -129,6 +129,13 @@ const Routes = () => {
             <StackNavigation.Screen
                name='HomeScreen'
                component={NavigationDrawer}
+               options={{
+                  headerShown: false,
+               }}
+            />
+            <StackNavigation.Screen
+               name='ProdutoScreen'
+               component={Produto}
                options={{
                   headerShown: false,
                }}

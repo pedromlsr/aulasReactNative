@@ -5,6 +5,7 @@ import { AutenticacaoProvider } from './context/AutenticacaoContext';
 import { LoadingProvider } from './context/LoadingContext';
 import { SearchProvider } from './context/SearchContext';
 import { CategoriasProvider } from './context/CategoriaContext';
+import { CarrinhoProvider } from './context/CarrinhoContext';
 
 export default () => {
 
@@ -13,7 +14,9 @@ export default () => {
       <LoadingProvider>
         <SearchProvider>
           <CategoriasProvider>
-            <Routes />
+            <CarrinhoProvider>
+              <Routes />
+            </CarrinhoProvider>
           </CategoriasProvider>
         </SearchProvider>
       </LoadingProvider>
