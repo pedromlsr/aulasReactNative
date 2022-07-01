@@ -1,5 +1,5 @@
-import React from "react";
-import { Icon } from 'react-native-elements';
+import React, { useContext } from "react";
+import { Icon, withBadge, Badge } from 'react-native-elements';
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -13,9 +13,15 @@ import Favoritos from '../pages/Favoritos';
 import Carrinho from "../pages/Carrinho";
 import Produto from "../pages/Produto";
 
+import { CarrinhoContext } from "../context/CarrinhoContext";
+
 const TabNavigation = createBottomTabNavigator()
 
 const BottomTabNavigator = () => {
+   const { contarQuantidadeProdutos } = useContext(CarrinhoContext)
+
+   const BadgeIcon = withBadge(contarQuantidadeProdutos())(Icon)
+
    return (
       <TabNavigation.Navigator
          screenOptions={{
@@ -66,7 +72,11 @@ const BottomTabNavigator = () => {
             options={{
                tabBarShowLabel: false,
                tabBarIcon: ({ size, color }) => (
-                  <Icon name='shopping-cart' color={color} type='font-awesome' size={size} />
+                  <BadgeIcon
+                     name='shopping-cart'
+                     color={color}
+                     type='font-awesome'
+                     size={size} />
                )
             }}
          />
