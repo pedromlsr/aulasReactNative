@@ -1,4 +1,4 @@
-import React, { createContext } from 'react';
+import React, { createContext, useState } from 'react';
 import Realm from 'realm';
 
 export const CarrinhoContext = createContext({})
@@ -49,11 +49,32 @@ export function CarrinhoProvider({ children }) {
       console.log(JSON.stringify(listarProdutos()))
    }
 
+   const removerProduto = (produto) => {
+      realm_carrinho.write(() => {
+         realm_carrinho.delete(produto)
+      })
+   }
+
+   const removerItemCarrinho = (_id) => {
+      realm_carrinho.write(() => {
+         realm_carrinho.delete(
+            realm_carrinho.objects('Produto').filter(produto => produto.id_produto == _id)
+         )
+         setIsFetching(true)
+      })
+   }
+
+   const [isFetching, setIsFetching] = useState(false)
+
    return (
       <CarrinhoContext.Provider value={{
          listarProdutos,
          contarQuantidadeProdutos,
-         adicionarProduto
+         adicionarProduto,
+         removerProduto,
+         removerItemCarrinho,
+         isFetching,
+         setIsFetching
       }}>
          {children}
       </CarrinhoContext.Provider>

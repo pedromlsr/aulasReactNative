@@ -5,13 +5,19 @@ import { FlatList } from "react-native-gesture-handler";
 import { CarrinhoContext } from "../../context/CarrinhoContext";
 
 const Carrinho = () => {
-   const { listarProdutos } = useContext(CarrinhoContext)
+   const { listarProdutos, removerProduto, removerItemCarrinho, isFetching, setIsFetching } = useContext(CarrinhoContext)
 
    const [carrinho, setCarrinho] = useState()
+   // const [isFetching, setIsFetching] = useState(false)
 
    useEffect(() => {
       getDadosCarrinho()
    }, [])
+
+   const onRefresh = () => {
+      getDadosCarrinho()
+      setIsFetching(false)
+   }
 
    const getDadosCarrinho = () => {
       setCarrinho(listarProdutos())
@@ -19,8 +25,12 @@ const Carrinho = () => {
 
    return (
       <FlatList
+         horizontal={true}
          data={carrinho}
          keyExtractor={(item, index) => index.toString()}
+         onRefresh={onRefresh}
+         refreshing={isFetching}
+         extraData={carrinho}
          renderItem={({ item, index }) => {
             return (
                <View style={styles.containerFlatlist}>
@@ -30,10 +40,8 @@ const Carrinho = () => {
                   <Text>{item.descricao_produto}</Text>
                   <Text>{item.preco_produto}</Text>
                   <TouchableOpacity
-                     onPress={
-                        () => console.log(`Deletar o produto de id ${item.id_produto}`)
-                     }
-                  >
+                     onPress={() => removerProduto(item)} >
+                     {/* onPress={() => removerItemCarrinho(item.id_produto)} > */}
                      <Icon name='trash' color='#000' type='font-awesome' size={36} />
                   </TouchableOpacity>
                </View>
